@@ -19,3 +19,20 @@ body {
     grid-template-rows: repeat(3, 1fr);
     height: 100vh;
 }
+
+.header, .message, .gameboard, .actions, .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
