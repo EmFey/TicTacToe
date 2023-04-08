@@ -30,9 +30,3 @@ body {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
 }
-
-.message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
