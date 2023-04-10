@@ -1,174 +1,67 @@
 // Gameboard module
 const gameBoard = (() => {
-  const board = ['', '', '', '', '', '', '', '', ''];
+  let gameArray = ["", "", "", "", "", "", "", "", ""];
 
-  const resetBoard = () => {
-    for (let i = 0; i < board.length; i++) {
-      board[i] = '';
-    }
+  const getGameArray = () => gameArray;
+  const updateGameArray = (index, value) => {
+    gameArray[index] = value;
+  };
+  const resetGameArray = () => {
+    gameArray = ["", "", "", "", "", "", "", "", ""];
   };
 
-  const getBoard = () => board;
-
-  const makeMove = (index, player) => {
-    board[index] = player.getSymbol();
+  return {
+    getGameArray,
+    updateGameArray,
+    resetGameArray,
   };
-
-  return { resetBoard, getBoard, makeMove };
 })();
+
+
 
 // Player factory function
 const Player = (name, symbol) => {
   const getName = () => name;
   const getSymbol = () => symbol;
+
   return { getName, getSymbol };
 };
 
-// Game module
-const game = (() => {
-  let player1, player2, currentPlayer;
-  let gameOver = false;
 
-  const initializeGame = (name1, symbol1, name2, symbol2) => {
-    player1 = Player(name1, symbol1);
-    player2 = Player(name2, symbol2);
-    currentPlayer = player1;
-    gameBoard.resetBoard();
-    gameOver = false;
-    displayController.updateBoard(gameBoard.getBoard());
-  };
 
-  const switchPlayer = () => {
-    if (currentPlayer === player1) {
-      currentPlayer = player2;
-    } else {
-      currentPlayer = player1;
-    }
-  };
-
-  const playTurn = (index) => {
-    if (!gameOver && gameBoard.getBoard()[index] === '') {
-      gameBoard.makeMove(index, currentPlayer);
-      displayController.updateBoard(gameBoard.getBoard());
-      checkWin();
-      switchPlayer();
-    }
-  };
-
-  const checkWin = () => {
-    const board = gameBoard.getBoard();
-    const winPatterns = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8], // horizontal wins
-      [0, 3, 6], [1, 4, 7], [2, 5, 8], // vertical wins
-      [0, 4, 8], [2, 4, 6] // diagonal wins
-    ];
-    for (let i = 0; i < winPatterns.length; i++) {
-      const [a, b, c] = winPatterns[i];
-      if (board[a] !== '' && board[a] === board[b] && board[a] === board[c]) {
-        displayController.displayWin(currentPlayer.getName());
-        gameOver = true;
-        return;
-      }
-    }
-    if (!board.includes('')) {
-      displayController.displayDraw();
-      gameOver = true;
-    }
-  };
-
-  return { initializeGame, playTurn };
-})();
-
-const displayController = (() => {
-  // Select the game board element and its cells
-  const form = document.querySelector('.cellGrid');
-  const cells = Array.from(document.querySelectorAll('.field'));
-  const message = document.querySelector('.message');
-  const resetBtn = document.querySelector('.btnRestart');
-
-  // Render the current game board state on the UI
-  function renderBoard(gameboard) {
-    cells.forEach((cell, index) => {
-      cell.textContent = gameboard[index];
-    });
-  }
-
-  // Clear the game board on the UI
-  function clearBoard() {
-    cells.forEach((cell) => {
-      cell.textContent = '';
-    });
-  }
-
-  return {
-    renderBoard,
-    clearBoard,
-  };
-})();
-
-/*const Player = (name, marker) => {
-  const getName = () => name;
-  const getMarker = () => marker;
-  return { getName, getMarker };
-};
-
-const gameBoard = (() => {
-  let board = ["", "", "", "", "", "", "", "", ""];
-  const getBoard = () => board;
-  const updateBoard = (index, marker) => {
-    board[index] = marker;
-  };
-  const resetBoard = () => {
-    board = ["", "", "", "", "", "", "", "", ""];
-  };
-  return { getBoard, updateBoard, resetBoard };
-})();
-
-const displayController = (() => {
-  const cells = document.querySelectorAll(".field");
-  cells.forEach(cell => cell.addEventListener("click", playerMove));
-  function playerMove() {
-    const index = Array.from(cells).indexOf(this);
-    if (gameBoard.getBoard()[index] === "") {
-      const marker = game.currentPlayer.getMarker();
-      gameBoard.updateBoard(index, marker);
-      this.textContent = marker;
-      const winner = game.checkWinner();
-      if (winner) {
-        endGame(winner);
-      } else if (!gameBoard.getBoard().includes("")) {
-        endGame("tie");
-      } else {
-        game.changeTurn();
-      }
-    }
-  }
-  function endGame(result) {
-    cells.forEach(cell => cell.removeEventListener("click", playerMove));
-    if (result === "tie") {
-      alert("It's a tie!");
-    } else {
-      alert(`${game.currentPlayer.getName()} has won!`);
-    }
-    gameBoard.resetBoard();
-    cells.forEach(cell => {
-      cell.textContent = "";
-      cell.addEventListener("click", playerMove);
-    });
-  }
-  return { endGame };
-})();
-
-const game = (() => {
-  let currentPlayer = "";
+// Game flow module
+const gameFlow = (() => {
   const player1 = Player("Player 1", "X");
   const player2 = Player("Player 2", "O");
-  const changeTurn = () => {
+  let currentPlayer = player1;
+
+  const gameTurn = (e) => {
+    const gameArray = gameBoard.getGameArray();
+    const index = e.target.dataset.index;
+
+    if (gameArray[index] !== "") return;
+
+    gameBoard.updateGameArray(index, currentPlayer.getSymbol());
+    displayController.renderBoard();
+
+    if (checkWin(currentPlayer.getSymbol())) {
+      displayController.showMessage(`${currentPlayer.getName()} wins!`);
+      displayController.disableBoard();
+      return;
+    }
+
+    if (checkDraw()) {
+      displayController.showMessage("Draw!");
+      displayController.disableBoard();
+      return;
+    }
+
     currentPlayer = currentPlayer === player1 ? player2 : player1;
   };
-  const checkWinner = () => {
-    const board = gameBoard.getBoard();
-    const winningCombos = [
+
+  const checkWin = (symbol) => {
+    const gameArray = gameBoard.getGameArray();
+    const winCombinations = [
       [0, 1, 2],
       [3, 4, 5],
       [6, 7, 8],
@@ -176,24 +69,76 @@ const game = (() => {
       [1, 4, 7],
       [2, 5, 8],
       [0, 4, 8],
-      [2, 4, 6]
+      [2, 4, 6],
     ];
-    return winningCombos.find(combo => {
-      if (
-        board[combo[0]] !== "" &&
-        board[combo[0]] === board[combo[1]] &&
-        board[combo[1]] === board[combo[2]]
-      ) {
-        return combo;
-      } else {
-        return false;
-      }
+
+    return winCombinations.some((combination) => {
+      return combination.every((index) => gameArray[index] === symbol);
     });
   };
-  const startGame = () => {
-    currentPlayer = Math.random() < 0.5 ? player1 : player2;
-  };
-  return { startGame, currentPlayer, changeTurn, checkWinner };
-})();*/
 
-game.startGame();
+  const checkDraw = () => {
+    const gameArray = gameBoard.getGameArray();
+    return gameArray.every((value) => value !== "");
+  };
+
+  function resetGame() {
+    // reset game board array and render empty grid
+    gameBoard.resetBoard();
+    displayController.render(gameBoard.getBoard());
+  
+    // reset game status message
+    displayController.updateMessage("Player 1's turn");
+  
+    // enable grid clicks and add event listener to each grid
+    const grids = document.querySelectorAll('.field');
+    for (let i = 0; i < grids.length; i++) {
+      grids[i].addEventListener('click', playTurn);
+      grids[i].classList.remove('x');
+      grids[i].classList.remove('o');
+    }
+  }
+  
+  // event listener for reset button click
+  document.getElementById('reset-button').addEventListener('click', resetGame);
+});
+
+
+
+// Display controller module
+const displayController = (() => {
+  const field = document.querySelectorAll(".field");
+  const message = document.querySelector(".message");
+  const resetButton = document.querySelector(".restartBtn");
+
+  const renderBoard = () => {
+    const gameArray = gameBoard.getGameArray();
+    field.forEach((div, index) => {
+      div.textContent = gameArray[index];
+    });
+  };
+
+  const showMessage = (message) => {
+    message.textContent = message;
+  };
+
+  const clearMessage = () => {
+    message.textContent = "";
+  };
+
+  const disableBoard = () => {
+    field.forEach((div) => {
+      div.removeEventListener("click", gameFlow.gameTurn);
+    });
+  };
+
+  const enableBoard = () => {
+    field.forEach((div) => {
+      div.addEventListener("click", gameFlow.gameTurn);
+    });
+  };
+
+  resetButton.addEventListener("click", gameFlow.resetGame);
+
+  return { renderBoard, showMessage, clearMessage, disableBoard, enableBoard };
+})();
