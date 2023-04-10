@@ -1,5 +1,5 @@
 // Gameboard module
-const gameBoard = (() => {
+/*const gameBoard = (() => {
   const board = ['', '', '', '', '', '', '', '', ''];
 
   const resetBoard = () => {
@@ -108,5 +108,96 @@ const displayController = (() => {
     renderBoard,
     clearBoard,
   };
+})();*/
+
+const Player = (name, marker) => {
+  const getName = () => name;
+  const getMarker = () => marker;
+  return { getName, getMarker };
+};
+
+const gameBoard = (() => {
+  let board = ["", "", "", "", "", "", "", "", ""];
+  const getBoard = () => board;
+  const updateBoard = (index, marker) => {
+    board[index] = marker;
+  };
+  const resetBoard = () => {
+    board = ["", "", "", "", "", "", "", "", ""];
+  };
+  return { getBoard, updateBoard, resetBoard };
 })();
 
+const displayController = (() => {
+  const cells = document.querySelectorAll(".field");
+  cells.forEach(cell => cell.addEventListener("click", playerMove));
+  function playerMove() {
+    const index = Array.from(cells).indexOf(this);
+    if (gameBoard.getBoard()[index] === "") {
+      const marker = game.currentPlayer.getMarker();
+      gameBoard.updateBoard(index, marker);
+      this.textContent = marker;
+      const winner = game.checkWinner();
+      if (winner) {
+        endGame(winner);
+      } else if (!gameBoard.getBoard().includes("")) {
+        endGame("tie");
+      } else {
+        game.changeTurn();
+      }
+    }
+  }
+  function endGame(result) {
+    cells.forEach(cell => cell.removeEventListener("click", playerMove));
+    if (result === "tie") {
+      alert("It's a tie!");
+    } else {
+      alert(`${game.currentPlayer.getName()} has won!`);
+    }
+    gameBoard.resetBoard();
+    cells.forEach(cell => {
+      cell.textContent = "";
+      cell.addEventListener("click", playerMove);
+    });
+  }
+  return { endGame };
+})();
+
+const game = (() => {
+  let currentPlayer = "";
+  const player1 = Player("Player 1", "X");
+  const player2 = Player("Player 2", "O");
+  const changeTurn = () => {
+    currentPlayer = currentPlayer === player1 ? player2 : player1;
+  };
+  const checkWinner = () => {
+    const board = gameBoard.getBoard();
+    const winningCombos = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    return winningCombos.find(combo => {
+      if (
+        board[combo[0]] !== "" &&
+        board[combo[0]] === board[combo[1]] &&
+        board[combo[1]] === board[combo[2]]
+      ) {
+        return combo;
+      } else {
+        return false;
+      }
+    });
+  };
+  const startGame = () => {
+    currentPlayer = Math.random() < 0.5 ? player1 : player2;
+  };
+  return { startGame, currentPlayer, changeTurn, checkWinner };
+})();
+
+game.startGame();
