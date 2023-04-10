@@ -1,5 +1,5 @@
 // Gameboard module
-/*const gameBoard = (() => {
+const gameBoard = (() => {
   const board = ['', '', '', '', '', '', '', '', ''];
 
   const resetBoard = () => {
@@ -14,11 +14,7 @@
     board[index] = player.getSymbol();
   };
 
-  return {
-    resetBoard,
-    getBoard,
-    makeMove,
-  };
+  return { resetBoard, getBoard, makeMove };
 })();
 
 // Player factory function
@@ -108,9 +104,9 @@ const displayController = (() => {
     renderBoard,
     clearBoard,
   };
-})();*/
+})();
 
-const Player = (name, marker) => {
+/*const Player = (name, marker) => {
   const getName = () => name;
   const getMarker = () => marker;
   return { getName, getMarker };
@@ -198,6 +194,6 @@ const game = (() => {
     currentPlayer = Math.random() < 0.5 ? player1 : player2;
   };
   return { startGame, currentPlayer, changeTurn, checkWinner };
-})();
+})();*/
 
 game.startGame();
