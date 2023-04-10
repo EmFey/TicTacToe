@@ -19,3 +19,18 @@ const Gameboard = (() => {
     resetBoard,
   };
 })();
+
+const Player = (name, marker) => {
+  // Private properties
+  const pName = name;
+  const pMarker = marker;
+
+  // Public methods
+  const getName = () => pName;
+  const getMarker = () => pMarker;
+
+  return {
+    getName,
+    getMarker,
+  };
+};
