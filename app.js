@@ -55,6 +55,14 @@ const gameFlow = (() => {
     }
   };
 
+  const resetGame = () => {
+    displayController.newGame();
+    gameFlow.startGame();
+  };
+
+  const restartButton = document.querySelector('.restartBtn');
+  restartButton.addEventListener('click', resetGame);
+
   return { startGame, playTurn };
 })();
 
@@ -82,7 +90,11 @@ const displayController = (() => {
     message.textContent = "It's a tie!";
   };
 
-  return { render, showWinner, showTie };
+  const newGame = () => {
+    message.textContent = "It's a new game";
+  }
+
+  return { render, showWinner, showTie, newGame };
 })();
 
 // Create players and start game
