@@ -55,8 +55,10 @@ body {
 }
 
 .field {
+    display: flex;
     background-color: white;
     border: 1px solid #1abc9c;
+    justify-content: center;
     align-items: center;
 }
 
