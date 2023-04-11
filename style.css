@@ -38,7 +38,7 @@ body {
     color: #3f474d;
 }
 
-.cellGrid {
+.board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -57,6 +57,7 @@ body {
 .field {
     background-color: white;
     border: 1px solid #1abc9c;
+    align-items: center;
 }
 
 button {
