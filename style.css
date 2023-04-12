@@ -8,6 +8,7 @@
 
 :root {
     --main-padding: 10px;
+    --shadow: #00000040 0px 14px 28px, #00000038 0px 10px 10px;
 }
 
 body {
@@ -122,7 +123,7 @@ a {
     z-index: 1;
     top: 50%;
     left: 50%;
-    width: 300px;
+    width: 350px;
     padding: var(--main-padding);
     border-radius: 10px;
     background-color: #dadada;
@@ -130,4 +131,12 @@ a {
     transform: translate(-50%, -50%) scale(0);
     transition: 0.2s ease-in-out;
     box-shadow: var(--shadow);
+}
+
+.active {
+    transform: translate(-50%, -50%) scale(1);
+    -webkit-transform: translate(-50%, -50%) scale(1);
+    -moz-transform: translate(-50%, -50%) scale(1);
+    -ms-transform: translate(-50%, -50%) scale(1);
+    -o-transform: translate(-50%, -50%) scale(1);
 }

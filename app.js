@@ -7,6 +7,7 @@ const createPlayer = (name, marker) => {
 const gameFlow = (() => {
   let currentPlayer;
   let gameBoard;
+  let modal = document.querySelector(".player-selection");
 
   const startGame = () => {
     gameBoard = ["", "", "", "", "", "", "", "", ""];
@@ -56,8 +57,9 @@ const gameFlow = (() => {
   };
 
   const resetGame = () => {
-    displayController.newGame();
-    gameFlow.startGame();
+    //displayController.newGame();
+    modal.classList.add("active");
+    //gameFlow.startGame();
   };
 
   const restartButton = document.querySelector('.restartBtn');
