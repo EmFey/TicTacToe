@@ -7,7 +7,10 @@ const createPlayer = (name, marker) => {
 const gameFlow = (() => {
   let currentPlayer;
   let gameBoard;
+  const restartButton = document.querySelector('.restartBtn');
   let modal = document.querySelector(".player-selection");
+  const humanBtn = document.querySelector('.human-btn');
+  const aiBtn = document.querySelector('.ai-btn');
 
   const startGame = () => {
     gameBoard = ["", "", "", "", "", "", "", "", ""];
@@ -56,17 +59,24 @@ const gameFlow = (() => {
     }
   };
 
-  const resetGame = () => {
+  const restartGame = () => {
     //displayController.newGame();
     modal.classList.add("active");
     //gameFlow.startGame();
   };
 
-  const restartButton = document.querySelector('.restartBtn');
-  restartButton.addEventListener('click', resetGame);
+  const humanGame = () => {
+    modal.classList.remove("active");
+    displayController.newGame();
+    gameFlow.startGame();
+  };
+
+  restartButton.addEventListener('click', restartGame);
+  humanBtn.addEventListener('click', humanGame);
 
   return { startGame, playTurn };
 })();
+
 
 // Module for rendering game board and messages to the screen
 const displayController = (() => {
