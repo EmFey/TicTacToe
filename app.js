@@ -71,8 +71,15 @@ const gameFlow = (() => {
     gameFlow.startGame();
   };
 
+  const aiGame = () => {
+    modal.classList.remove("active");
+    displayController.newGame();
+    //gameFlow.startGame();
+  };
+
   restartButton.addEventListener('click', restartGame);
   humanBtn.addEventListener('click', humanGame);
+  aiBtn.addEventListener('click', aiGame);
 
   return { startGame, playTurn };
 })();
