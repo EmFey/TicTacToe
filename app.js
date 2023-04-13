@@ -6,7 +6,7 @@ const createPlayer = (name, marker) => {
 // Factory function for creating AI
 const AIPlayer = (symbol) => {
   const getMove = (board) => {
-    const emptySpaces = board.filter((space) => space === '');
+    const emptySpaces = gameBoard.filter((space) => space === '');
     const randomIndex = Math.floor(Math.random() * emptySpaces.length);
     return emptySpaces[randomIndex];
   }
@@ -88,6 +88,7 @@ const gameFlow = (() => {
 
   const humanGame = () => {
     modal.classList.remove("active");
+    humanBtn.classList.add("human");
     displayController.newGame();
     gameFlow.startGame();
   };
