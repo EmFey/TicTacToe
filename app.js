@@ -15,7 +15,7 @@ const AIPlayer = (symbol) => {
 }
 
 // Module for managing game flow
-const gameFlow = (() => {
+/*const gameFlow = (() => {
   let currentPlayer;
   let gameBoard;
   const restartButton = document.querySelector('.restartBtn');
@@ -32,9 +32,11 @@ const gameFlow = (() => {
     if (humanBtn.classList.contains('human')) {
       player1 = createPlayer('Player 1', 'X');
       player2 = createPlayer('Player 2', 'O');
+      currentPlayer = player1;
     } else {
       player1 = createPlayer('Player 1', 'X');
       player2 = AIPlayer('AI', 'O');
+      currentPlayer = player1;
     }
     displayController.render(gameBoard);
     const gameController = GameController(gameBoard, player1, player2);
@@ -96,7 +98,7 @@ const gameFlow = (() => {
   const aiGame = () => {
     modal.classList.remove("active");
     displayController.newGame();
-    //gameFlow.startGame();
+    gameFlow.startGame();
   };
 
   restartButton.addEventListener('click', restartGame);
@@ -104,11 +106,13 @@ const gameFlow = (() => {
   aiBtn.addEventListener('click', aiGame);
 
   return { startGame, playTurn };
-})();
+})();*/
+
+
 
 
 // Module for rendering game board and messages to the screen
-const displayController = (() => {
+/*const displayController = (() => {
   const board = document.querySelector(".board");
   const message = document.querySelector(".message");
 
@@ -141,4 +145,102 @@ const displayController = (() => {
 // Create players and start game
 const player1 = createPlayer("Player 1", "X");
 const player2 = createPlayer("Player 2", "O");
-gameFlow.startGame();
+gameFlow.startGame();*/
+
+
+
+const GameController = (() => {
+  let player1, player2, currentPlayer;
+  let isGameStarted = false;
+
+  const startGame = (isAgainstAi) => {
+  if (isGameStarted) return;
+
+  player1 = createPlayer('Player 1', 'X');
+  if (isAgainstAi) {
+    player2 = AIPlayer('AI', 'O');
+  } else {
+      player2 = createPlayer('Player 2', 'O');
+  }
+  currentPlayer = player1;
+
+  displayController.updateMessage(`${currentPlayer.getName()} goes first`);
+  isGameStarted = true;
+  };
+
+    const switchPlayer = () => {
+      currentPlayer = currentPlayer === player1 ? player2 : player1;
+      displayController.updateMessage(`${currentPlayer.getName()}'s turn (${currentPlayer.getSymbol()})`);
+    };
+  
+    const makeMove = (index) => {
+      if (!isGameStarted) return;
+  
+      const result = gameBoard.placeSymbol(index, currentPlayer.getSymbol());
+      if (result) {
+        displayController.updateBoard(gameBoard.getBoard());
+        if (gameBoard.checkForWinner(currentPlayer.getSymbol())) {
+          displayController.updateMessage(`${currentPlayer.getName()} wins!`);
+          isGameStarted = false;
+        } else if (gameBoard.checkForTie()) {
+          displayController.updateMessage('Tie game!');
+          isGameStarted = false;
+        } else {
+          switchPlayer();
+          if (currentPlayer instanceof AIPlayer) {
+            setTimeout(() => {
+              const aiMove = currentPlayer.getMove(gameBoard.getAvailableIndexes());
+              makeMove(aiMove);
+            }, 1000);
+          }
+        }
+      }
+    };
+  
+    const init = () => {
+      displayController.initBoard(makeMove);
+  
+      const humanButton = document.querySelector('.human-btn');
+      const aiButton = document.querySelector('.ai-btn');
+  
+      humanButton.addEventListener('click', () => {
+        startGame(false);
+      });
+  
+      aiButton.addEventListener('click', () => {
+        startGame(true);
+      });
+    };
+  
+    return { init };
+})();
+
+
+const displayController = (() => {
+    const messageContainer = document.querySelector('.message');
+    const gameBoardContainer = document.querySelector('.board');
+  
+    const renderGameBoard = (gameBoard, handleClick) => {
+      gameBoardContainer.innerHTML = '';
+  
+      gameBoard.forEach((cellValue, index) => {
+        const cellElement = document.createElement('div');
+        cellElement.classList.add('field');
+        cellElement.dataset.index = index;
+        cellElement.textContent = cellValue || '';
+  
+        cellElement.addEventListener('click', handleClick);
+  
+        gameBoardContainer.appendChild(cellElement);
+      });
+    };
+  
+    const renderMessage = (message) => {
+      messageContainer.textContent = message;
+    };
+  
+    return {
+      renderGameBoard,
+      renderMessage,
+    };
+  })();
