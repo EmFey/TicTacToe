@@ -204,10 +204,12 @@ const GameController = (() => {
     const aiButton = document.querySelector('.ai-btn');
 
     humanButton.addEventListener('click', () => {
+      modal.classList.remove("active");
       startGame(false);
     });
 
     aiButton.addEventListener('click', () => {
+      modal.classList.remove("active");
       startGame(true);
     });
   };
@@ -243,3 +245,11 @@ const displayController = (() => {
     renderMessage,
   };
 })();
+
+const modal = document.querySelector(".player-selection");
+const restartButton = document.querySelector('.restartBtn');
+const restartGame = () => {
+  modal.classList.add("active");
+};
+
+restartButton.addEventListener('click', restartGame);
