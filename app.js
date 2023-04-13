@@ -3,6 +3,17 @@ const createPlayer = (name, marker) => {
   return { name, marker };
 };
 
+// Factory function for creating AI
+const AIPlayer = (symbol) => {
+  const getMove = (board) => {
+    const emptySpaces = board.filter((space) => space === '');
+    const randomIndex = Math.floor(Math.random() * emptySpaces.length);
+    return emptySpaces[randomIndex];
+  }
+
+  return { symbol, getMove };
+}
+
 // Module for managing game flow
 const gameFlow = (() => {
   let currentPlayer;
