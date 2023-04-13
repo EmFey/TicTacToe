@@ -14,8 +14,20 @@ const gameFlow = (() => {
 
   const startGame = () => {
     gameBoard = ["", "", "", "", "", "", "", "", ""];
-    currentPlayer = player1;
+    //currentPlayer = player1;
+    //displayController.render(gameBoard);
+
+    let player1, player2;
+    if (humanBtn.classList.contains('human')) {
+      player1 = createPlayer('Player 1', 'X');
+      player2 = createPlayer('Player 2', 'O');
+    } else {
+      player1 = createPlayer('Player 1', 'X');
+      player2 = AIPlayer('AI', 'O');
+    }
     displayController.render(gameBoard);
+    const gameController = GameController(gameBoard, player1, player2);
+    gameController.startGame();
   };
 
   const nextTurn = () => {
@@ -60,9 +72,7 @@ const gameFlow = (() => {
   };
 
   const restartGame = () => {
-    //displayController.newGame();
     modal.classList.add("active");
-    //gameFlow.startGame();
   };
 
   const humanGame = () => {
