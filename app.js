@@ -15,7 +15,7 @@ const AIPlayer = (symbol) => {
 }
 
 // Module for managing game flow
-/*const gameFlow = (() => {
+const gameFlow = (() => {
   let currentPlayer;
   let gameBoard;
   const restartButton = document.querySelector('.restartBtn');
@@ -43,6 +43,9 @@ const AIPlayer = (symbol) => {
     gameController.startGame();
   };
 
+  const GameController = (gameBoard, player1, player2) => {
+    let currentPlayer = player1;
+  }
   const nextTurn = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
   };
@@ -106,13 +109,13 @@ const AIPlayer = (symbol) => {
   aiBtn.addEventListener('click', aiGame);
 
   return { startGame, playTurn };
-})();*/
+})();
 
 
 
 
 // Module for rendering game board and messages to the screen
-/*const displayController = (() => {
+const displayController = (() => {
   const board = document.querySelector(".board");
   const message = document.querySelector(".message");
 
@@ -145,6 +148,4 @@ const AIPlayer = (symbol) => {
 // Create players and start game
 const player1 = createPlayer("Player 1", "X");
 const player2 = createPlayer("Player 2", "O");
-gameFlow.startGame();*/
-
-
+gameFlow.startGame();
