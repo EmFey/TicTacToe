@@ -3,17 +3,6 @@ const createPlayer = (name, marker) => {
   return { name, marker };
 };
 
-// Factory function for creating AI
-const AIPlayer = (symbol) => {
-  const getMove = (board) => {
-    const emptySpaces = gameBoard.filter((space) => space === '');
-    const randomIndex = Math.floor(Math.random() * emptySpaces.length);
-    return emptySpaces[randomIndex];
-  }
-
-  return { symbol, getMove };
-}
-
 // Module for managing game flow
 const gameFlow = (() => {
   let currentPlayer;
@@ -25,27 +14,10 @@ const gameFlow = (() => {
 
   const startGame = () => {
     gameBoard = ["", "", "", "", "", "", "", "", ""];
-    //currentPlayer = player1;
-    //displayController.render(gameBoard);
-
-    let player1, player2;
-    if (humanBtn.classList.contains('human')) {
-      player1 = createPlayer('Player 1', 'X');
-      player2 = createPlayer('Player 2', 'O');
-      currentPlayer = player1;
-    } else {
-      player1 = createPlayer('Player 1', 'X');
-      player2 = AIPlayer('AI', 'O');
-      currentPlayer = player1;
-    }
+    currentPlayer = player1;
     displayController.render(gameBoard);
-    const gameController = GameController(gameBoard, player1, player2);
-    gameController.startGame();
   };
 
-  const GameController = (gameBoard, player1, player2) => {
-    let currentPlayer = player1;
-  }
   const nextTurn = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
   };
@@ -88,12 +60,13 @@ const gameFlow = (() => {
   };
 
   const restartGame = () => {
+    //displayController.newGame();
     modal.classList.add("active");
+    //gameFlow.startGame();
   };
 
   const humanGame = () => {
     modal.classList.remove("active");
-    humanBtn.classList.add("human");
     displayController.newGame();
     gameFlow.startGame();
   };
@@ -101,7 +74,7 @@ const gameFlow = (() => {
   const aiGame = () => {
     modal.classList.remove("active");
     displayController.newGame();
-    gameFlow.startGame();
+    //gameFlow.startGame();
   };
 
   restartButton.addEventListener('click', restartGame);
@@ -110,8 +83,6 @@ const gameFlow = (() => {
 
   return { startGame, playTurn };
 })();
-
-
 
 
 // Module for rendering game board and messages to the screen
